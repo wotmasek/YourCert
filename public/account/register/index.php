@@ -50,11 +50,11 @@ $renderer   = new LayoutRenderer($connection);
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">Password:</label>
-            <input type="password" name="password" id="password" class="form-control" required placeholder="Enter password">
+            <input type="password" name="password" id="password" class="form-control" required placeholder="Enter password" minlength="8">
           </div>
           <div class="mb-3">
             <label for="repeated_password" class="form-label">Repeat Password:</label>
-            <input type="password" name="repeated_password" id="repeated_password" class="form-control" required placeholder="Repeat password">
+            <input type="password" name="repeated_password" id="repeated_password" class="form-control" required placeholder="Repeat password" minlength="8">
           </div>
           <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>

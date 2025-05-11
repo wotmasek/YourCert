@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" &&
         $last_name  = trim($_POST['last_name']);
         $email      = trim($_POST['email']);
         $password   = trim($_POST['password']);
-        $repeated_password = trim($_POST['repeted_password']);
+        $repeated_password = trim($_POST['repeated_password']);
         $birth_date = trim($_POST['birth_date']);
         
         $api = new SystemAPI($connection);

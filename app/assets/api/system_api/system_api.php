@@ -99,16 +99,32 @@ class SystemAPI extends ActionMenager {
     }
     
     public function registerUser($first_name, $last_name, $email, $password, $reapeted_password, $birth_date, $permission_id = 1) {
-        if (
-            !filter_var($email, FILTER_VALIDATE_EMAIL) ||
-            !validatePassword($password) ||
-            !validateName($first_name) ||
-            !validateName($last_name) ||
-            !validate_birth_date($birth_date) || 
-            !filter_var($permission_id, FILTER_VALIDATE_INT) || 
-            $password !== $reapeted_password
-        ) {
-            return ['success' => false, 'error' => 'Invalid input data'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ['success' => false, 'error' => 'Invalid email format.'];
+        }
+    
+        if (!validatePassword($password)) {
+            return ['success' => false, 'error' => 'Password does not meet requirements.'];
+        }
+    
+        if ($password !== $reapeted_password) {
+            return ['success' => false, 'error' => 'Passwords do not match.'];
+        }
+    
+        if (!validateName($first_name)) {
+            return ['success' => false, 'error' => 'Invalid first name.'];
+        }
+    
+        if (!validateName($last_name)) {
+            return ['success' => false, 'error' => 'Invalid last name.'];
+        }
+    
+        if (!validate_birth_date($birth_date)) {
+            return ['success' => false, 'error' => 'Invalid birth date.'];
+        }
+    
+        if (!filter_var($permission_id, FILTER_VALIDATE_INT)) {
+            return ['success' => false, 'error' => 'Invalid permission ID.'];
         }
     
         $stmt = $this->conn->prepare("SELECT id FROM users WHERE email = :email");
@@ -131,7 +147,7 @@ class SystemAPI extends ActionMenager {
         $stmt->bindParam(':first_name',        $first_name);
         $stmt->bindParam(':last_name',         $last_name);
         $stmt->bindParam(':birth_date',        $birth_date);
-        $stmt->bindParam(':permission_id',     $permission_id);  
+        $stmt->bindParam(':permission_id',     $permission_id);
     
         if (!$stmt->execute()) {
             return ['success' => false, 'error' => 'Registration failed. Please try again later.'];
@@ -167,7 +183,7 @@ class SystemAPI extends ActionMenager {
         } catch (Exception $e) {
             return ['success' => false, 'error' => 'Mailer Error: ' . $mail->ErrorInfo];
         }
-    }       
+    }
 
     public function requestPasswordReset($email) {
         if (!validateEmail($email)) {
