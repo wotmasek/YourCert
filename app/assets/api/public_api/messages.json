@@ -1,0 +1,12 @@
+{
+    "invalid_limit": "Invalid limit value",
+    "invalid_offset": "Invalid offset value",
+    "invalid_limit_offset": "Invalid limit or offset",
+    "invalid_course_id": "Invalid course ID",
+    "course_not_found": "Course not found",
+    "invalid_institution_id": "Invalid institution ID",
+    "institution_not_found": "Institution not found",
+    "invalid_certificate_id": "Invalid certificate ID",
+    "certificate_not_found": "Certificate not found"
+}
+  

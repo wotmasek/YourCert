@@ -1,0 +1,72 @@
+.institution-profile {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+.banner img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px 4px 0 0;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+.profile-image-container {
+    margin-right: 20px;
+}
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.institution-name {
+    font-size: 2em;
+    margin: 0;
+}
+.institution-description {
+    margin-top: 20px;
+    line-height: 1.5;
+}
+.contact-info > div {
+    margin-bottom: 10px;
+}
+.label {
+    font-weight: bold;
+    color: #555;
+}
+
+.courses, .certificates {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+.section-title {
+    font-size: 1.5em;
+    margin-top: 0;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+.course, .certificate {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+.course:last-child, .certificate:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,5 @@
+{
+  "requestPasswordReset": { "limit": 5,  "timeWindow": 3600 },
+  "resetPassword":        { "limit": 10, "timeWindow": 3600 },
+  "createRole":           { "limit": 5,  "timeWindow": 3600 }
+}

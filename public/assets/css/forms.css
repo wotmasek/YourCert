@@ -1,0 +1,20 @@
+.form-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+.wrapper-flash-msg {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    max-width: 100%;
+    margin-top: 1rem;
+}
+@media (max-width: 500px) {
+    .wrapper-flash-msg {
+        width: 300px;
+    }
+}

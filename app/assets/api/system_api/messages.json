@@ -1,0 +1,23 @@
+{
+    "invalid_email_address": "Invalid email address",
+    "rate_limit_exceeded_requestPasswordReset": "Rate limit exceeded for requestPasswordReset",
+    "user_not_found": "User not found",
+    "failed_create_password_reset_token": "Failed to create password reset token",
+    "reset_password_subject": "Reset your password",
+    "reset_password_body": "Click the link below to reset your password:",
+    "mailer_error": "Mailer Error: ",
+    "rate_limit_exceeded_resetPassword": "Rate limit exceeded for resetPassword",
+    "invalid_user_id": "Invalid user ID",
+    "invalid_token_format": "Invalid token format",
+    "invalid_new_password": "Invalid new password",
+    "invalid_or_expired_token": "Invalid or expired token",
+    "failed_reset_password": "Failed to reset password",
+    "password_reset_success": "Password has been reset",
+    "rate_limit_exceeded_createRole": "Rate limit exceeded for createRole",
+    "empty_role_name": "Role name cannot be empty",
+    "incorrect_permissions_count": "Incorrect number of permissions provided",
+    "role_already_exists": "Role with that name already exists",
+    "role_created": "Role created successfully",
+    "failed_create_role": "Failed to create role: "
+}
+  

@@ -1,0 +1,38 @@
+:root {
+    --background-light: #fff;
+    --text-color-light: #1f1f1f;
+    
+    --background-dark: #191919; 
+    --text-color-dark: #fff;
+    
+    --nav-height: 0; 
+    --footer-height: 0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background-color: var(--background-light);
+    color: var(--text-color-light);
+}
+
+main {
+    padding: 20px;
+    width: 100%;
+    height: auto;
+    margin-top: var(--nav-height);
+    min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+}
+
+.ico {
+    filter: invert(0.75);
+}
+
+body.dark-mode .ico {
+    filter: invert(0);
+}
+
