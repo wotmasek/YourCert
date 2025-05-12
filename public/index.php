@@ -142,14 +142,9 @@ $ogType      = htmlspecialchars($institution['og_type'] ?? 'website');
 
             <div class="profile-content">
                 <h1 class="h3 mb-2"><?= htmlspecialchars($institution['name']) ?></h1>
-                <?php
-                    $raw = nl2br(htmlspecialchars($institution['description'] ?? ''));
-                    $rawText = strip_tags($raw);
-                    $limit = 200;
-                ?>
-                <p data-limit="<?= $limit ?>" class="toggle-wrapper">
+                <p data-limit="250" class="toggle-wrapper post-toggle">
                 <span class="short-text"></span>
-                <span class="full-text d-none"><?= $raw ?></span>
+                <span class="full-text d-none"><?= nl2br(htmlspecialchars($institution['description'] ?? '')) ?></span>
                 <a href="#" class="toggle-text d-none"></a>
                 </p>
                 <ul class="list-inline mt-3">
@@ -207,21 +202,17 @@ $ogType      = htmlspecialchars($institution['og_type'] ?? 'website');
                     </aside>
                     <div class="col-md-9">
                         <?php foreach ($courses as $course): ?>
-                        <div id="course-<?= $course['id'] ?>" class="card mb-3 rounded">
+                        <div id="course-<?= $course['id'] ?>" class="card mb-3 rounded post-toggle" data-limit="200">
                             <div class="card-body d-flex">
                                 <div class="flex-shrink-0 me-3"><i class="bi bi-journal-code h1"></i></div>
                                 <div class="w-100">
                                     <h5 class="card-title"><?= htmlspecialchars($course['title']) ?></h5>
-                                    <?php
-                                    $d = htmlspecialchars($course['description']);
-                                    if (strlen($d) > 100): $s = substr($d, 0, 100);
-                                    ?>
-                                        <p><?= $s ?>... <a href="#" data-bs-toggle="collapse" data-bs-target="#course-full-<?= $course['id'] ?>">Show More</a></p>
-                                        <div id="course-full-<?= $course['id'] ?>" class="collapse"><p><?= nl2br($d) ?></p></div>
-                                    <?php else: ?>
-                                        <p><?= nl2br($d) ?></p>
-                                    <?php endif; ?>
-                                    <small class="text-muted">
+                                    <div class="full-text d-none">
+                                        <p><?= nl2br(htmlspecialchars($course['description'])) ?></p>
+                                    </div>
+                                    <div class="short-text"></div>
+                                    <a href="#" class="toggle-text d-none"></a>
+                                    <small class="text-muted d-block">
                                         Author: <?= htmlspecialchars($course['course_author']) ?>
                                         &middot; Created: <?= date('Y-m-d', strtotime($course['created_at'])) ?>
                                     </small>
@@ -258,29 +249,25 @@ $ogType      = htmlspecialchars($institution['og_type'] ?? 'website');
                     </aside>
                     <div class="col-md-9">
                         <?php foreach ($certificates as $cert): ?>
-                        <div id="cert-<?= $cert['id'] ?>" class="card mb-3 rounded">
+                        <div id="cert-<?= $cert['id'] ?>" class="card mb-3 rounded post-toggle" data-limit="200">
                             <div class="card-body d-flex">
                                 <?php if (!empty($cert['certificate_image_path'])): ?>
                                 <img src="<?= HTTP_ADRESS . 'uploads/certificates/' . htmlspecialchars($cert['certificate_image_path']) ?>"
-                                     alt="<?= htmlspecialchars($cert['title']) ?>"
-                                     class="img-thumbnail me-3" style="width:80px;height:80px;object-fit: cover;">
+                                    alt="<?= htmlspecialchars($cert['title']) ?>"
+                                    class="img-thumbnail me-3" style="width:80px;height:80px;object-fit: cover;">
                                 <?php else: ?>
                                 <div class="bg-secondary text-white d-flex align-items-center justify-content-center me-3"
-                                     style="width:80px;height:80px;border-radius:.25rem;">
+                                    style="width:80px;height:80px;border-radius:.25rem;">
                                     <i class="bi bi-award h2"></i>
                                 </div>
                                 <?php endif; ?>
                                 <div class="w-100">
                                     <h5 class="card-title"><?= htmlspecialchars($cert['title']) ?></h5>
-                                    <?php
-                                    $d = htmlspecialchars($cert['description']);
-                                    if (strlen($d) > 100): $s = substr($d, 0, 100);
-                                    ?>
-                                        <p><?= $s ?>... <a href="#" data-bs-toggle="collapse" data-bs-target="#cert-full-<?= $cert['id'] ?>">Show More</a></p>
-                                        <div id="cert-full-<?= $cert['id'] ?>" class="collapse"><p><?= nl2br($d) ?></p></div>
-                                    <?php else: ?>
-                                        <p><?= nl2br($d) ?></p>
-                                    <?php endif; ?>
+                                    <div class="full-text d-none">
+                                        <p><?= nl2br(htmlspecialchars($cert['description'])) ?></p>
+                                    </div>
+                                    <div class="short-text"></div>
+                                    <a href="#" class="toggle-text d-none"></a>
                                     <?php if (!empty($cert['course_id'])):
                                         $parentArr = array_filter($courses, fn($c) => $c['id'] === $cert['course_id']);
                                         $parent    = array_shift($parentArr);
@@ -301,6 +288,7 @@ $ogType      = htmlspecialchars($institution['og_type'] ?? 'website');
                     </div>
                 </div>
             </div>
+
 
             <!-- NEWS -->
             <div class="tab-pane fade" id="news-pane">
