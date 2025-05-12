@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . '/../../../app/config.php';
 require_once __DIR__ . '/../../../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../../../app/assets/api/user_apis/apis/assigned_certificates/assigned_certificates.php';
@@ -7,8 +9,6 @@ require_once __DIR__ . '/../../assets/php/elements/layout_menager.php';
 use Database\Database;
 use Api\UserAPI\AssignedCertificatesMenagment;
 use Assets\LayoutRenderer;
-
-session_start();
 
 if (!isset($_SESSION['userID'])) {
     header("Location: " . LOGIN_PAGE);

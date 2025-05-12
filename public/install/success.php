@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../../app/assets/flash_messages.php';
 
 $lockFile = __DIR__ . '/../../app/install.lock';

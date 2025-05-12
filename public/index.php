@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../app/assets/api/public_api/public_api.php';
@@ -7,8 +9,6 @@ require_once __DIR__ . '/assets/php/elements/layout_menager.php';
 use Api\PublicAPI\PublicAPI;
 use Database\Database;
 use Assets\LayoutRenderer;
-
-session_start();
 
 $database   = new Database();
 $connection = $database->getConnection();

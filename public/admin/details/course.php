@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . '/../../../app/config.php';
 require_once __DIR__ . '/../../../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../../../app/assets/api/public_api/public_api.php';
@@ -11,8 +13,6 @@ use Api\PublicAPI\PublicAPI;
 use Api\UserAPI\CourseMenagment;
 use Api\UserAPI\UserMenagment;
 use Assets\LayoutRenderer;
-
-session_start();
 
 function isUserAdmin($conn) {
     if (!isset($_SESSION['userID'])) return false;

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . '/../../../app/config.php';
 require_once __DIR__ . '/../../../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../../../app/assets/flash_messages.php';
@@ -6,8 +8,6 @@ require_once __DIR__ . '/../../assets/php/elements/layout_menager.php';
 
 use Database\Database;
 use Assets\LayoutRenderer;
-
-session_start();
 
 if (isset($_GET['code'])) {
     $confirmationCode = $_GET['code'];

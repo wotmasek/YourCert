@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../../app/config.php';
 require_once __DIR__ . '/../../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../../app/assets/api/public_api/public_api.php';
