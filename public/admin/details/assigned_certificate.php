@@ -250,19 +250,19 @@ if (!empty($assigned_certificate['personalized_certificate_image_path'])
             </div>
 
             <div class="col-12 d-flex justify-content-end gap-2 mt-3">
-              <button type="submit"
-                      name="update"
-                      class="btn btn-primary btn-sm">
-                Save Changes
-              </button>
-              <button type="submit"
+                <button type="submit"
                       name="delete"
                       class="btn btn-danger btn-sm"
                       onclick="return confirm('Are you sure you want to delete this assigned certificate?');">
-                Delete Assigned Certificate
-              </button>
+                    Delete Assigned Certificate
+                </button>
+                <button type="submit"
+                      name="update"
+                      class="btn btn-primary btn-sm">
+                    Save Changes
+                </button>
             </div>
-
+    
           </form>
         </div>
       </div>

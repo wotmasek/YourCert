@@ -41,70 +41,80 @@ $certificate = $res['certificate'];
 $validUntil = $_POST['valid_until'] ?? (!empty($certificate['valid_until']) ? date('Y-m-d', strtotime($certificate['valid_until'])) : '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $posted_course_id       = trim($_POST['course_id'] ?? '');
-    $posted_title           = trim($_POST['title'] ?? '');
-    $posted_description     = trim($_POST['description'] ?? '');
-    $posted_pdf_path        = trim($_POST['certificate_image_path'] ?? '');
-    $posted_valid_until     = trim($_POST['valid_until'] ?? '');
-
-    $posted_course_id   = $posted_course_id === '' ? null : (int)$posted_course_id;
-    $posted_pdf_path    = $posted_pdf_path === '' ? null : $posted_pdf_path;
-    $posted_valid_until = $posted_valid_until === '' ? null : $posted_valid_until;
-
-    if (!empty($_FILES['certificate_image']['tmp_name']) && $_FILES['certificate_image']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['image/jpeg','image/png','image/gif'];
-        $type    = mime_content_type($_FILES['certificate_image']['tmp_name']);
-        if (in_array($type, $allowed)) {
-            $ext  = str_replace('image/', '.', $type);
-            $name = bin2hex(random_bytes(8)) . $ext;
-            $dir  = __DIR__ . '/../../uploads/certificates/';
-            if (!is_dir($dir)) mkdir($dir, 0755, true);
-            if (move_uploaded_file($_FILES['certificate_image']['tmp_name'], $dir . $name)) {
-                $posted_pdf_path = $name;
-            } else {
-                $message = 'Error saving uploaded file.';
-            }
+    if (isset($_POST['delete'])) {
+        $del = $certificateApi->deleteCertificate($certificate_id);
+        if ($del['success']) {
+            header('Location: ' . ADMIN_PANEL . '?data_type=certificates');
+            exit;
         } else {
-            $message = 'Invalid file type. Accepted: JPEG, PNG, GIF.';
+            $message = 'Error: ' . $del['error'];
         }
-    }
-
-    $fields = [
-        'course_id'   => $posted_course_id,
-        'title'       => $posted_title,
-        'description' => $posted_description,
-        'valid_until' => $posted_valid_until,
-    ];
-
-    if ($posted_pdf_path !== null) {
-        $fields['certificate_image_path'] = $posted_pdf_path;
-    }
-
-    $imageChanged = false;
-    if ($posted_pdf_path !== null) {
-        $imageChanged = ($posted_pdf_path !== $certificate['certificate_image_path']);
-    }
-
-    $noChange = (
-      $posted_course_id      == $certificate['course_id']
-      && $posted_title       === $certificate['title']
-      && $posted_description === $certificate['description']
-      && $posted_valid_until === $certificate['valid_until']
-      && $imageChanged === false
-  );
-
-  if ($noChange) {
-    $message = 'No changes detected.';
-  } else {
-    $upd = $certificateApi->updateCertificate($certificate_id, $fields);
-    if ($upd['success']) {
-        setFlashMessage('success', 'Certificate updated.');
-        header('Location: ' . ADMIN_PANEL . '?data_type=certificates');
-        exit;
     } else {
-        $message = 'Error: ' . $upd['error'];
+        $posted_course_id       = trim($_POST['course_id'] ?? '');
+        $posted_title           = trim($_POST['title'] ?? '');
+        $posted_description     = trim($_POST['description'] ?? '');
+        $posted_pdf_path        = trim($_POST['certificate_image_path'] ?? '');
+        $posted_valid_until     = trim($_POST['valid_until'] ?? '');
+
+        $posted_course_id   = $posted_course_id === '' ? null : (int)$posted_course_id;
+        $posted_pdf_path    = $posted_pdf_path === '' ? null : $posted_pdf_path;
+        $posted_valid_until = $posted_valid_until === '' ? null : $posted_valid_until;
+
+        if (!empty($_FILES['certificate_image']['tmp_name']) && $_FILES['certificate_image']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['image/jpeg','image/png','image/gif'];
+            $type    = mime_content_type($_FILES['certificate_image']['tmp_name']);
+            if (in_array($type, $allowed)) {
+                $ext  = str_replace('image/', '.', $type);
+                $name = bin2hex(random_bytes(8)) . $ext;
+                $dir  = __DIR__ . '/../../uploads/certificates/';
+                if (!is_dir($dir)) mkdir($dir, 0755, true);
+                if (move_uploaded_file($_FILES['certificate_image']['tmp_name'], $dir . $name)) {
+                    $posted_pdf_path = $name;
+                } else {
+                    $message = 'Error saving uploaded file.';
+                }
+            } else {
+                $message = 'Invalid file type. Accepted: JPEG, PNG, GIF.';
+            }
+        }
+
+        $fields = [
+            'course_id'   => $posted_course_id,
+            'title'       => $posted_title,
+            'description' => $posted_description,
+            'valid_until' => $posted_valid_until,
+        ];
+
+        if ($posted_pdf_path !== null) {
+            $fields['certificate_image_path'] = $posted_pdf_path;
+        }
+
+        $imageChanged = false;
+        if ($posted_pdf_path !== null) {
+            $imageChanged = ($posted_pdf_path !== $certificate['certificate_image_path']);
+        }
+
+        $noChange = (
+          $posted_course_id      == $certificate['course_id']
+          && $posted_title       === $certificate['title']
+          && $posted_description === $certificate['description']
+          && $posted_valid_until === $certificate['valid_until']
+          && $imageChanged === false
+      );
+
+      if ($noChange) {
+        $message = 'No changes detected.';
+      } else {
+        $upd = $certificateApi->updateCertificate($certificate_id, $fields);
+        if ($upd['success']) {
+            setFlashMessage('success', 'Certificate updated.');
+            header('Location: ' . ADMIN_PANEL . '?data_type=certificates');
+            exit;
+        } else {
+            $message = 'Error: ' . $upd['error'];
+        }
+      }
     }
-  }
 }
 
 $renderer = new LayoutRenderer($connection);
@@ -199,7 +209,10 @@ $renderer = new LayoutRenderer($connection);
               >
             </div>
 
-            <div class="col-12 d-flex justify-content-end mt-3">
+            <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+              <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this certificate?');">
+                Delete Certificate
+              </button>
               <button type="submit" class="btn btn-primary btn-sm">
                 Update Certificate
               </button>
