@@ -5,5 +5,5 @@
 
   RewriteRule ^public/ - [L]
 
-  RewriteRule ^(.*)$ public/$1 [L]
+  RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>

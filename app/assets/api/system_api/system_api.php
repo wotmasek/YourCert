@@ -222,7 +222,7 @@ class SystemAPI extends ActionMenager {
             return ['success' => false, 'error' => $this->messages['failed_create_password_reset_token']];
         }
 
-        $resetLink = PASSWORD_RESET_PAGE . "?uid={$userId}&token={$token}";
+        $resetLink = PASSWORD_RESET_PAGE . "?token={$token}";
 
         $mail = new PHPMailer(true);
         $emailConfig = require __DIR__ . '/../../../email_config.php';

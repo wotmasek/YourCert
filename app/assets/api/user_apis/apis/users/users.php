@@ -33,7 +33,7 @@ class UserMenagment extends UserAPI {
             return ['success' => false, 'error' => $this->messages['failed_create_account_delete_request']];
         }
     
-        $confirmLink = ACCOUNT_DELETE_PAGE . "?uid={$this->user_id}&token={$token}";
+        $confirmLink = ACCOUNT_DELETE_PAGE . "?token={$token}";
     
         $sql = "SELECT email FROM users WHERE id = :user_id AND is_active = 1";
         $stmt = $this->conn->prepare($sql);
@@ -45,9 +45,9 @@ class UserMenagment extends UserAPI {
         }
         $oldEmail = $userData['email'];
     
-        require_once __DIR__ . '/../../../../vendor/autoload.php';
+        require_once __DIR__ . '/../../../../../../vendor/autoload.php';
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-        $emailConfig = require __DIR__ . '/../../../email_config.php';
+        $emailConfig = require __DIR__ . '/../../../../../email_config.php';
         try {
             $mail->isSMTP();
             $mail->Host       = $emailConfig['host'];
@@ -80,20 +80,20 @@ class UserMenagment extends UserAPI {
             return ['success' => false, 'error' => $this->messages['invalid_token']];
         }
         
-        $sql = "SELECT id, token_hash FROM account_delete_requests 
-                WHERE user_id = :user_id AND expires_at >= NOW() ORDER BY created_at DESC AND is_active = 1";
+        $sql = "
+            SELECT id, token_hash
+            FROM account_delete_requests
+            WHERE user_id = :user_id
+              AND expires_at >= NOW()
+            ORDER BY created_at DESC
+            LIMIT 1
+        ";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':user_id', $this->user_id);
         $stmt->execute();
         
-        $request = null;
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            if (password_verify($token, $row['token_hash'])) {
-                $request = $row;
-                break;
-            }
-        }
-        if (!$request) {
+        $request = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if (!$request || !password_verify($token, $request['token_hash'])) {
             return ['success' => false, 'error' => $this->messages['invalid_or_expired_token']];
         }
         
@@ -119,12 +119,12 @@ class UserMenagment extends UserAPI {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':user_id', $this->user_id);
             $stmt->execute();
-        
+    
             $this->logAction('confirmAccountDelete', 'user', $this->user_id, $this->user_id, "Account deleted");
             return ['success' => true, 'message' => $this->messages['account_deleted'] ?? 'Konto zostało usunięte'];
         }
         return ['success' => false, 'error' => $this->messages['failed_account_deletion']];
-    }
+    }    
 
     public function requestEmailChange($newEmail) {
         if (!$this->checkRateLimitAction('requestEmailChange')) {
@@ -162,7 +162,7 @@ class UserMenagment extends UserAPI {
             return ['success' => false, 'error' => $this->messages['failed_create_email_change_request']];
         }
     
-        $confirmLink = EMAIL_RESET_PAGE . "?uid={$this->user_id}&token={$token}";
+        $confirmLink = EMAIL_RESET_PAGE . "?token={$token}";
     
         $sql = "SELECT email FROM users WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
@@ -174,9 +174,9 @@ class UserMenagment extends UserAPI {
         }
         $oldEmail = $userData['email'];
     
-        require_once __DIR__ . '/../../../../../vendor/autoload.php';
+        require_once __DIR__ . '/../../../../../../vendor/autoload.php';
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-        $emailConfig = require __DIR__ . '/../../../../email_config.php';
+        $emailConfig = require __DIR__ . '/../../../../../email_config.php';
         try {
             $mail->isSMTP();
             $mail->Host       = $emailConfig['host'];

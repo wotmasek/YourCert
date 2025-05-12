@@ -7,75 +7,85 @@ require_once __DIR__ . '/../../../app/assets/api/db_connect.php';
 require_once __DIR__ . '/../../../app/assets/api/system_api/system_api.php';
 require_once __DIR__ . '/../../assets/php/elements/layout_menager.php';
 
-use Database\Database;
-use Api\SystemAPI\SystemAPI;
 use Assets\LayoutRenderer;
+use Database\Database; 
+use Api\SystemAPI\SystemAPI; 
 
-if (!isset($_SESSION['userID'])) {
-    header('Location: ' . LOGIN_PAGE);
-    exit;
-}
-
-$db       = new Database();
-$conn     = $db->getConnection();
-$api      = new SystemAPI($conn);
+$database = new Database();
+$conn = $database->getConnection();
 $renderer = new LayoutRenderer($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (empty($_POST['token'])) {
-        setFlashMessage('error', 'Token is missing.');
-        header('Location: ' . ACCOUNT_DELETE_PAGE);
+    if (empty($_POST['email'])) {
+        setFlashMessage('error', 'Empty email');
+        header('Location: ' . PASSWORD_REQUEST_PAGE);
         exit;
     }
-    $token = trim($_POST['token']);
+
+    $email = trim($_POST['email']);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlashMessage('error', 'Invalid email');
+        header('Location: ' . PASSWORD_REQUEST_PAGE);
+        exit;
+    }
+
     try {
-        $result = $api->confirmAccountDelete($token);
+        $api = new SystemAPI($conn);
+        $result = $api->requestPasswordReset($email);
+
         if ($result['success']) {
-            session_destroy();
-            setFlashMessage('success', $result['message']);
+            setFlashMessage('success', 'Password reset email has been sent to your email');
             header('Location: ' . LOGIN_PAGE);
-            exit;
         } else {
-            setFlashMessage('error', $result['error'] ?? 'Unknown error occurred.');
-            header('Location: ' . ACCOUNT_DELETE_PAGE);
-            exit;
+            setFlashMessage('error', $result['error'] ?? 'Unknown error occurred');
+            header('Location: ' . PASSWORD_REQUEST_PAGE);
         }
     } catch (Exception $e) {
-        setFlashMessage('error', 'Internal server error.');
-        header('Location: ' . ACCOUNT_DELETE_PAGE);
-        exit;
+        setFlashMessage('error', 'Internal server error');
+        header('Location: ' . PASSWORD_REQUEST_PAGE);
     }
+    exit;
 }
-
-$token = $_GET['token'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>Confirm Account Deletion</title>
+  <title>Password Reset Request</title>
   <?php $renderer->renderHead(); ?>
+  <link rel="stylesheet" href="../../assets/css/forms.css">
 </head>
 <body class="bg-body text-body">
-  <?php $renderer->renderNav(); ?>
+  <?php $renderer->renderMinNav(); ?>
+
   <main>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-      <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
-        <div class="card-body">
-          <?= getFlashMessages() ?>
-
-          <h4 class="card-title mb-3 text-center">Confirm Account Deletion</h4>
-          <p>This action will permanently delete your account. Are you sure?</p>
-
-          <form method="post" class="d-grid gap-2">
-            <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
-            <button type="submit" class="btn btn-danger btn-sm">Yes, Delete My Account</button>
-            <a href="<?= DASHBOARD_PAGE ?>" class="btn btn-secondary btn-sm">Cancel</a>
-          </form>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+      <div class="border p-4 rounded bg-body-secondary shadow-sm form-wrapper" style="min-width: 300px;">
+        
+        <div class="wrapper-flash-msg mb-3">
+          <?php echo getFlashMessages(); ?>
         </div>
+
+        <form action="" method="post">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              required
+              placeholder="Enter your email"
+            >
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            Request Password Reset
+          </button>
+        </form>
+
       </div>
     </div>
   </main>
-  <?php $renderer->renderFooter(); ?>
 </body>
 </html>
